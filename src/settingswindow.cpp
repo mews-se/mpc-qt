@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QColorDialog>
+#include <QFontDatabase>
 #include <QStyleHints>
 #include <QToolTip>
 #include <QToolButton>
@@ -438,6 +439,10 @@ void SettingsWindow::setupPlatformWidgets()
     if (!Platform::tiledDesktopsExist()) {
         ui->playbackAutozoomWarn->setVisible(false);
     }
+
+    // MPC-HC's default subtitle font, or the closest common one when missing
+    QString subsFont = QFontDatabase::hasFamily("Calibri") ? "Calibri" : "Arial";
+    ui->fontComboBox->setCurrentFont(QFont(subsFont));
 
     ui->stylesheetFusion->setChecked(Platform::isWindows);
     ui->ipcMpris->setVisible(Platform::isUnix);
