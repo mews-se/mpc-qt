@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 #include <QHash>
+#include <QTimer>
 #include <QTranslator>
 #include "ipc/http.h"
 #include "ipc/json.h"
@@ -42,6 +43,11 @@ public:
     static void earlyPlatformOverride();
     static bool isNvidiaGPU();
 
+#ifdef Q_OS_MACOS
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+#endif
+
 signals:
     void windowsRestored();
     void flushLog();
@@ -69,6 +75,9 @@ private:
 
 private slots:
     void self_windowsRestored();
+#ifdef Q_OS_MACOS
+    void fileOpenTimer_timeout();
+#endif
     void loadPlaylistsBackup();
     void mainwindow_instanceShouldQuit();
     void mainwindow_fullscreenHideControls(bool hide);
@@ -152,6 +161,11 @@ private:
     bool validCliPos = false;
     bool addToPlaylist = false;
     QStringList customFiles;
+#ifdef Q_OS_MACOS
+    QTimer fileOpenTimer;
+    QList<QUrl> fileOpenUrls;
+    bool windowsAreRestored = false;
+#endif
 
     static bool isWayland;
     static bool isWaylandMode;
