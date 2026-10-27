@@ -16,6 +16,7 @@
 #include <stdexcept>
 #include "logger.h"
 #include "mpvwidget.h"
+#include "rarstream.h"
 #include "widgets/logowidget.h"
 #include "storage.h"
 
@@ -367,6 +368,8 @@ void MpvObject::fileOpen(QString filename, bool isLocalFile, bool replaceMpvPlay
 {
     clearSubFiles();
     filename = normalizeWindowsPath(filename, isLocalFile);
+    if (RarStream::canStream(filename))
+        filename = RarStream::streamUrl(filename);
     if (replaceMpvPlaylist || previousWasVideo) {
         setMpvPropertyVariant("vid", "no"); // clear last frame of previous video file
         emit ctrlCommand(QStringList({"loadfile", filename}));
@@ -1318,6 +1321,7 @@ void MpvController::create(const OptionList &earlyOptions)
     if (mpv_initialize(mpv) < 0)
         throw std::runtime_error("could not initialize mpv context");
 
+    RarStream::registerProtocol(mpv);
     mpv_set_wakeup_callback(mpv, MpvController::mpvWakeup, this);
     protocolList_ = getPropertyVariant("protocol-list").toStringList();
 }

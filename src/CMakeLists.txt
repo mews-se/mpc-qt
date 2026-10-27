@@ -27,6 +27,7 @@ set(SOURCES
     playlist.cpp playlist.h
     playlistwindow.cpp playlistwindow.h playlistwindow.ui
     propertieswindow.cpp propertieswindow.h propertieswindow.ui
+    rarstream.cpp rarstream.h
     settingswindow.cpp settingswindow.h settingswindow.ui
     storage.cpp storage.h
     thumbnailerwindow.cpp thumbnailerwindow.h thumbnailerwindow.ui
