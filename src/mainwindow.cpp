@@ -690,6 +690,13 @@ void MainWindow::setupMenu()
 
     ui->menuViewOntop->setDisabled(QGuiApplication::platformName() == "wayland");
 
+#ifdef Q_OS_MACOS
+    // Command-Q quits on a Mac.  Qt maps Ctrl to Command there, so Quick Open
+    // gives up its Ctrl+Q to Exit.
+    ui->actionFileOpenQuick->setShortcut(QKeySequence());
+    ui->actionFileExit->setShortcut(QKeySequence::Quit);
+#endif
+
     connect(Platform::deviceManager(), &DeviceManager::deviceListChanged,
             this, [this]() { updateDiscList(); });
 }
