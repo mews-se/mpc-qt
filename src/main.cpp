@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QIcon>
 #include <QStandardPaths>
+#include <QSurfaceFormat>
 #include <QJsonDocument>
 #include <QTimer>
 #include <QCommandLineParser>
@@ -453,6 +454,15 @@ bool Flow::earlyQuit()
 
 void Flow::earlyPlatformOverride()
 {
+#ifdef Q_OS_MACOS
+    // macOS hands out a legacy OpenGL 2.1 context unless a core profile is
+    // requested, and mpv needs 3.0 or later for VideoToolbox interop.
+    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+    format.setVersion(3, 2);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(format);
+#endif
+
     if (!Platform::isUnix)
         return;
 
